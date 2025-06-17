@@ -1,5 +1,8 @@
 used on maven setup 3.9.9
 
+mvn clean install
+java -jar jarname
+
 springboot-java7-style project
 
 
