@@ -1,3 +1,5 @@
+used on maven setup 3.9.9
+
 springboot-java7-style project
 
 
