@@ -1,5 +1,8 @@
 used on maven setup 3.9.9
 
+
+Commands to run local::
+
 mvn clean install
 java -jar jarname
 
