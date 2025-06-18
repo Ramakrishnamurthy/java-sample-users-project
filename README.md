@@ -43,3 +43,18 @@ bash
 CopyEdit
 curl http://localhost:8080/users/search?keyword=Rama
 (Assumes you add a custom filtering endpoint later, optional)
+
+
+
+
+File Operations to create , read and delete a file
+
+# Create a file
+curl -X POST "http://localhost:8080/file/create?filename=test.txt&content=HelloWorld"
+
+# Read the file
+curl "http://localhost:8080/file/read?filename=test.txt"
+
+# Delete the file
+curl -X DELETE "http://localhost:8080/file/delete?filename=test.txt"
+
