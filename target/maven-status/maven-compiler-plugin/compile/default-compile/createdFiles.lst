@@ -1,6 +1,8 @@
+com/example/demo/service/FileService.class
 com/example/demo/DemoApplication.class
 com/example/demo/repository/UserRepository.class
 com/example/demo/controller/UserController.class
 com/example/demo/model/Users.class
+com/example/demo/controller/FileController.class
 com/example/demo/service/UserService.class
 com/example/demo/service/UserService$1.class
