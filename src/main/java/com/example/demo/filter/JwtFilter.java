@@ -13,6 +13,7 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Optional;
 
 @Component
 public class JwtFilter extends OncePerRequestFilter {
@@ -25,19 +26,17 @@ public class JwtFilter extends OncePerRequestFilter {
             throws ServletException, IOException {
         String authorizationHeader = request.getHeader("Authorization");
 
-        String username = null;
-        String token = null;
+        Optional<String> tokenOpt = Optional.ofNullable(authorizationHeader)
+                .filter(header -> header.startsWith("Bearer "))
+                .map(header -> header.substring(7));
 
-        if (authorizationHeader != null && authorizationHeader.startsWith("Bearer ")) {
-            token = authorizationHeader.substring(7);
+        Optional<String> usernameOpt = tokenOpt.map(jwtUtil::extractUsername);
 
-            username = jwtUtil.extractUsername(token);
-        }
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        if (usernameOpt.isPresent() && SecurityContextHolder.getContext().getAuthentication() == null) {
+            String token = tokenOpt.get();
             if (jwtUtil.isTokenValid(token)) {
                 UsernamePasswordAuthenticationToken authenticationToken =
-                        new UsernamePasswordAuthenticationToken(username, null, null);
+                        new UsernamePasswordAuthenticationToken(usernameOpt.get(), null, null);
                 authenticationToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
                 SecurityContextHolder.getContext().setAuthentication(authenticationToken);
             }

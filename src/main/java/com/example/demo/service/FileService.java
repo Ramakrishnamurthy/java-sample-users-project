@@ -17,14 +17,12 @@ public class FileService {
     }
 
     public String createFile(String filename, String content) {
-        try {
-            File file = new File(BASE_PATH + filename);
-            if (file.exists()) {
-                return "File already exists.";
-            }
-            BufferedWriter writer = new BufferedWriter(new FileWriter(file));
+        File file = new File(BASE_PATH + filename);
+        if (file.exists()) {
+            return "File already exists.";
+        }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
             writer.write(content);
-            writer.close();
             return "File created successfully.";
         } catch (IOException e) {
             return "Error creating file: " + e.getMessage();
@@ -32,18 +30,13 @@ public class FileService {
     }
 
     public String readFile(String filename) {
-        try {
-            File file = new File(BASE_PATH + filename);
-            if (!file.exists()) {
-                return "File not found.";
-            }
-            BufferedReader reader = new BufferedReader(new FileReader(file));
-            String line;
-            StringBuilder content = new StringBuilder();
-            while ((line = reader.readLine()) != null) {
-                content.append(line).append("\n");
-            }
-            reader.close();
+        File file = new File(BASE_PATH + filename);
+        if (!file.exists()) {
+            return "File not found.";
+        }
+        StringBuilder content = new StringBuilder();
+        try (BufferedReader reader = new BufferedReader(new FileReader(file))) {
+            reader.lines().forEach(line -> content.append(line).append("\n"));
             return content.toString();
         } catch (IOException e) {
             return "Error reading file: " + e.getMessage();

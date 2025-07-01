@@ -1,4 +1,3 @@
-
 package com.example.demo.model;
 
 import org.hibernate.validator.constraints.Email;
