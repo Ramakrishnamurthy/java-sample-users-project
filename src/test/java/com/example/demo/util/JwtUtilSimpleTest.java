@@ -1,8 +1,7 @@
 package com.example.demo.util;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilSimpleTest {
 
@@ -27,9 +26,7 @@ public class JwtUtilSimpleTest {
         JwtUtil jwtUtil = new JwtUtil();
         String username = "testuser";
         String token = jwtUtil.generateToken(username);
-        
-        String extractedUsername = jwtUtil.extractUsername(token);
-        
+        String extractedUsername = jwtUtil.extractUsername(token).orElse(null);
         assertEquals(username, extractedUsername);
     }
 
