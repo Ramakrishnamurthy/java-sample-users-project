@@ -4,6 +4,7 @@ import com.example.demo.model.Users;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 
@@ -17,19 +18,18 @@ public class UserServiceSimpleTest {
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        List<Users> result = new ArrayList<Users>();
         String domain = "example.com";
         
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            if (u.getEmail() != null && u.getEmail().endsWith("@" + domain)) {
-                result.add(u);
-            }
-        }
+        List<Users> result = users.stream()
+                .filter(user -> user.getEmailOptional()
+                        .map(email -> email.endsWith("@" + domain))
+                        .orElse(false))
+                .collect(Collectors.toList());
         
         assertEquals(2, result.size());
-        assertEquals("john@example.com", result.get(0).getEmail());
-        assertEquals("bob@example.com", result.get(1).getEmail());
+        assertTrue(result.stream()
+                .map(Users::getEmail)
+                .allMatch(email -> email.endsWith("@example.com")));
     }
 
     @Test
@@ -40,15 +40,17 @@ public class UserServiceSimpleTest {
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        Collections.sort(users, new Comparator<Users>() {
-            public int compare(Users u1, Users u2) {
-                return u1.getName().compareTo(u2.getName());
-            }
-        });
+        List<Users> sortedUsers = users.stream()
+                .sorted((u1, u2) -> u1.getNameOptional()
+                        .orElse("")
+                        .compareTo(u2.getNameOptional().orElse("")))
+                .collect(Collectors.toList());
         
-        assertEquals("Alice Smith", users.get(0).getName());
-        assertEquals("Bob Johnson", users.get(1).getName());
-        assertEquals("John Doe", users.get(2).getName());
+        List<String> expectedOrder = Arrays.asList("Alice Smith", "Bob Johnson", "John Doe");
+        List<String> actualOrder = sortedUsers.stream()
+                .map(Users::getName)
+                .collect(Collectors.toList());
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
@@ -59,22 +61,13 @@ public class UserServiceSimpleTest {
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        Map<String, List<Users>> map = new HashMap<String, List<Users>>();
-        
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            String email = u.getEmail();
-            if (email != null) {
-                String[] parts = email.split("@");
-                if (parts.length == 2) {
-                    String domain = parts[1];
-                    if (!map.containsKey(domain)) {
-                        map.put(domain, new ArrayList<Users>());
-                    }
-                    map.get(domain).add(u);
-                }
-            }
-        }
+        Map<String, List<Users>> map = users.stream()
+                .filter(user -> user.getEmailOptional().isPresent())
+                .collect(Collectors.groupingBy(user -> {
+                    String email = user.getEmailOptional().get();
+                    String[] parts = email.split("@");
+                    return parts.length == 2 ? parts[1] : "unknown";
+                }));
         
         assertEquals(2, map.size());
         assertTrue(map.containsKey("example.com"));
@@ -92,17 +85,16 @@ public class UserServiceSimpleTest {
         );
         
         String keyword = "john";
-        List<Users> result = new ArrayList<Users>();
         
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            if (u.getName() != null && u.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(u);
-            }
-        }
+        List<Users> result = users.stream()
+                .filter(user -> user.getNameOptional()
+                        .map(name -> name.toLowerCase().contains(keyword.toLowerCase()))
+                        .orElse(false))
+                .collect(Collectors.toList());
         
         assertEquals(2, result.size());
-        assertTrue(result.get(0).getName().toLowerCase().contains("john"));
-        assertTrue(result.get(1).getName().toLowerCase().contains("john"));
+        assertTrue(result.stream()
+                .map(Users::getName)
+                .allMatch(name -> name.toLowerCase().contains("john")));
     }
 }

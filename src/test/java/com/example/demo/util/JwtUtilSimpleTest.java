@@ -2,6 +2,8 @@ package com.example.demo.util;
 
 import org.junit.Test;
 
+import java.util.Optional;
+
 import static org.junit.Assert.*;
 
 public class JwtUtilSimpleTest {
@@ -28,9 +30,10 @@ public class JwtUtilSimpleTest {
         String username = "testuser";
         String token = jwtUtil.generateToken(username);
         
-        String extractedUsername = jwtUtil.extractUsername(token);
+        Optional<String> extractedUsername = jwtUtil.extractUsername(token);
         
-        assertEquals(username, extractedUsername);
+        assertTrue(extractedUsername.isPresent());
+        assertEquals(username, extractedUsername.get());
     }
 
     @Test

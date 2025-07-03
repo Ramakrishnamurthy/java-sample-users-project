@@ -1,4 +1,3 @@
-
 package com.example.demo.service;
 
 import com.example.demo.model.Users;
@@ -7,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 @Service
 public class UserService {
@@ -18,68 +18,81 @@ public class UserService {
         return userRepository.findAll();
     }
 
-
     public void addUser(Users users) {
         userRepository.save(users);
     }
 
-
     public List<Users> getUsersByDomain(String domain) {
-        List<Users> result = new ArrayList<Users>();
-        List<Users> all = userRepository.findAll();
-        for (int i = 0; i < all.size(); i++) {
-            Users u = all.get(i);
-            if (u.getEmail() != null && u.getEmail().endsWith("@" + domain)) {
-                result.add(u);
-            }
-        }
-        return result;
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getEmailOptional()
+                        .map(email -> email.endsWith("@" + domain))
+                        .orElse(false))
+                .collect(Collectors.toList());
     }
 
     public List<Users> sortUsersBy(final String field) {
-        List<Users> users = userRepository.findAll();
-        Collections.sort(users, new Comparator<Users>() {
-            public int compare(Users u1, Users u2) {
-                if ("name".equals(field)) {
-                    return u1.getName().compareTo(u2.getName());
-                } else if ("email".equals(field)) {
-                    return u1.getEmail().compareTo(u2.getEmail());
-                }
-                return 0;
-            }
-        });
-        return users;
+        return userRepository.findAll()
+                .stream()
+                .sorted((u1, u2) -> {
+                    switch (field) {
+                        case "name":
+                            return u1.getNameOptional()
+                                    .orElse("")
+                                    .compareTo(u2.getNameOptional().orElse(""));
+                        case "email":
+                            return u1.getEmailOptional()
+                                    .orElse("")
+                                    .compareTo(u2.getEmailOptional().orElse(""));
+                        default:
+                            return 0;
+                    }
+                })
+                .collect(Collectors.toList());
     }
 
     public Map<String, List<Users>> groupByEmailDomain() {
-        Map<String, List<Users>> map = new HashMap<String, List<Users>>();
-        List<Users> users = userRepository.findAll();
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            String email = u.getEmail();
-            if (email != null) {
-                String[] parts = email.split("@");
-                if (parts.length == 2) {
-                    String domain = parts[1];
-                    if (!map.containsKey(domain)) {
-                        map.put(domain, new ArrayList<Users>());
-                    }
-                    map.get(domain).add(u);
-                }
-            }
-        }
-        return map;
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getEmailOptional().isPresent())
+                .collect(Collectors.groupingBy(user -> {
+                    String email = user.getEmailOptional().get();
+                    String[] parts = email.split("@");
+                    return parts.length == 2 ? parts[1] : "unknown";
+                }));
     }
 
     public List<Users> searchUsersByName(String keyword) {
-        List<Users> result = new ArrayList<Users>();
-        List<Users> users = userRepository.findAll();
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            if (u.getName() != null && u.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(u);
-            }
-        }
-        return result;
+        String lowerKeyword = keyword.toLowerCase();
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getNameOptional()
+                        .map(name -> name.toLowerCase().contains(lowerKeyword))
+                        .orElse(false))
+                .collect(Collectors.toList());
+    }
+
+    public Optional<Users> findUserById(Long id) {
+        return userRepository.findById(id);
+    }
+
+    public List<Users> findUsersByEmailPattern(String pattern) {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getEmailOptional()
+                        .map(email -> email.matches(pattern))
+                        .orElse(false))
+                .collect(Collectors.toList());
+    }
+
+    public Map<String, Long> getEmailDomainCounts() {
+        return userRepository.findAll()
+                .stream()
+                .filter(user -> user.getEmailOptional().isPresent())
+                .collect(Collectors.groupingBy(user -> {
+                    String email = user.getEmailOptional().get();
+                    String[] parts = email.split("@");
+                    return parts.length == 2 ? parts[1] : "unknown";
+                }, Collectors.counting()));
     }
 }

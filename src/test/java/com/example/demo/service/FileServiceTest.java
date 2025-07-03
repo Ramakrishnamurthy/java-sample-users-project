@@ -5,6 +5,9 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Optional;
 
 import static org.junit.Assert.*;
 
@@ -18,18 +21,20 @@ public class FileServiceTest {
     public void setUp() {
         fileService = new FileService();
         // Clean up any existing test file
-        File testFile = new File("files/" + TEST_FILENAME);
-        if (testFile.exists()) {
-            testFile.delete();
+        try {
+            Files.deleteIfExists(Paths.get("files", TEST_FILENAME));
+        } catch (Exception e) {
+            // Ignore cleanup errors
         }
     }
 
     @After
     public void tearDown() {
         // Clean up test file after each test
-        File testFile = new File("files/" + TEST_FILENAME);
-        if (testFile.exists()) {
-            testFile.delete();
+        try {
+            Files.deleteIfExists(Paths.get("files", TEST_FILENAME));
+        } catch (Exception e) {
+            // Ignore cleanup errors
         }
     }
 
@@ -39,8 +44,7 @@ public class FileServiceTest {
         
         assertEquals("File created successfully.", result);
         
-        File file = new File("files/" + TEST_FILENAME);
-        assertTrue(file.exists());
+        assertTrue(Files.exists(Paths.get("files", TEST_FILENAME)));
     }
 
     @Test
@@ -61,7 +65,7 @@ public class FileServiceTest {
         
         String result = fileService.readFile(TEST_FILENAME);
         
-        assertEquals(TEST_CONTENT + "\n", result);
+        assertEquals(TEST_CONTENT, result);
     }
 
     @Test
@@ -69,6 +73,51 @@ public class FileServiceTest {
         String result = fileService.readFile("nonexistent.txt");
         
         assertEquals("File not found.", result);
+    }
+
+    @Test
+    public void testReadFileOptional() {
+        // Create file first
+        fileService.createFile(TEST_FILENAME, TEST_CONTENT);
+        
+        Optional<String> result = fileService.readFileOptional(TEST_FILENAME);
+        
+        assertTrue(result.isPresent());
+        assertEquals(TEST_CONTENT, result.get());
+    }
+
+    @Test
+    public void testReadFileOptionalNotFound() {
+        Optional<String> result = fileService.readFileOptional("nonexistent.txt");
+        
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testFileExists() {
+        // Create file first
+        fileService.createFile(TEST_FILENAME, TEST_CONTENT);
+        
+        assertTrue(fileService.fileExists(TEST_FILENAME));
+        assertFalse(fileService.fileExists("nonexistent.txt"));
+    }
+
+    @Test
+    public void testGetFileSize() {
+        // Create file first
+        fileService.createFile(TEST_FILENAME, TEST_CONTENT);
+        
+        long size = fileService.getFileSize(TEST_FILENAME);
+        
+        assertTrue(size > 0);
+        assertEquals(TEST_CONTENT.length(), size);
+    }
+
+    @Test
+    public void testGetFileSizeNotFound() {
+        long size = fileService.getFileSize("nonexistent.txt");
+        
+        assertEquals(-1, size);
     }
 
     @Test
@@ -80,8 +129,7 @@ public class FileServiceTest {
         
         assertEquals("File deleted successfully.", result);
         
-        File file = new File("files/" + TEST_FILENAME);
-        assertFalse(file.exists());
+        assertFalse(Files.exists(Paths.get("files", TEST_FILENAME)));
     }
 
     @Test

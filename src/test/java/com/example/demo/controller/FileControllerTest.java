@@ -1,9 +1,9 @@
 package com.example.demo.controller;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -13,18 +13,14 @@ import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.ResultActions;
-import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.example.demo.controller.FileController;
 import com.example.demo.service.FileService;
 
-@SuppressWarnings("deprecation")
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@RunWith(SpringRunner.class)
 public class FileControllerTest {
 	
 	private MockMvc mockMvc;
@@ -37,7 +33,7 @@ public class FileControllerTest {
 
 	@Before
 	public void setUp() throws Exception {
-        MockitoAnnotations.initMocks(this);
+        MockitoAnnotations.openMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(fileController).build();
 	}
 
@@ -46,7 +42,7 @@ public class FileControllerTest {
         String filename = "test.txt";
         String expectedResponse = "File created";
         when(fileService.createFile(filename, "Hello")).thenReturn("File created");
-        mockMvc.perform(MockMvcRequestBuilders.post("/file/create")
+        mockMvc.perform(post("/file/create")
                 .param("filename", filename)
                 .param("content", "Hello")
                 .contentType(MediaType.APPLICATION_FORM_URLENCODED))
