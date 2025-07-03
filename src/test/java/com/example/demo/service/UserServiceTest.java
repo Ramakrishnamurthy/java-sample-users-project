@@ -6,6 +6,7 @@ import org.junit.Before;
 import org.junit.Test;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
@@ -62,8 +63,9 @@ public class UserServiceTest {
         List<Users> result = userService.getUsersByDomain("example.com");
         
         assertEquals(2, result.size());
-        assertEquals("john@example.com", result.get(0).getEmail());
-        assertEquals("bob@example.com", result.get(1).getEmail());
+        assertTrue(result.stream()
+                .map(Users::getEmail)
+                .allMatch(email -> email.endsWith("@example.com")));
     }
 
     @Test
@@ -72,7 +74,7 @@ public class UserServiceTest {
         
         List<Users> result = userService.getUsersByDomain("nonexistent.com");
         
-        assertEquals(0, result.size());
+        assertTrue(result.isEmpty());
     }
 
     @Test
@@ -81,9 +83,11 @@ public class UserServiceTest {
         
         List<Users> result = userService.sortUsersBy("name");
         
-        assertEquals("Bob Johnson", result.get(0).getName());
-        assertEquals("Jane Smith", result.get(1).getName());
-        assertEquals("John Doe", result.get(2).getName());
+        List<String> expectedOrder = Arrays.asList("Bob Johnson", "Jane Smith", "John Doe");
+        List<String> actualOrder = result.stream()
+                .map(Users::getName)
+                .collect(Collectors.toList());
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
@@ -92,9 +96,11 @@ public class UserServiceTest {
         
         List<Users> result = userService.sortUsersBy("email");
         
-        assertEquals("bob@example.com", result.get(0).getEmail());
-        assertEquals("jane@test.com", result.get(1).getEmail());
-        assertEquals("john@example.com", result.get(2).getEmail());
+        List<String> expectedOrder = Arrays.asList("bob@example.com", "jane@test.com", "john@example.com");
+        List<String> actualOrder = result.stream()
+                .map(Users::getEmail)
+                .collect(Collectors.toList());
+        assertEquals(expectedOrder, actualOrder);
     }
 
     @Test
@@ -117,8 +123,9 @@ public class UserServiceTest {
         List<Users> result = userService.searchUsersByName("john");
         
         assertEquals(2, result.size());
-        assertTrue(result.get(0).getName().toLowerCase().contains("john"));
-        assertTrue(result.get(1).getName().toLowerCase().contains("john"));
+        assertTrue(result.stream()
+                .map(Users::getName)
+                .allMatch(name -> name.toLowerCase().contains("john")));
     }
 
     @Test
@@ -127,6 +134,49 @@ public class UserServiceTest {
         
         List<Users> result = userService.searchUsersByName("xyz");
         
-        assertEquals(0, result.size());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
+    public void testFindUserById() {
+        Users user = testUsers.get(0);
+        when(userRepository.findById(1L)).thenReturn(Optional.of(user));
+        
+        Optional<Users> result = userService.findUserById(1L);
+        
+        assertTrue(result.isPresent());
+        assertEquals(user, result.get());
+    }
+
+    @Test
+    public void testFindUserByIdNotFound() {
+        when(userRepository.findById(999L)).thenReturn(Optional.empty());
+        
+        Optional<Users> result = userService.findUserById(999L);
+        
+        assertFalse(result.isPresent());
+    }
+
+    @Test
+    public void testFindUsersByEmailPattern() {
+        when(userRepository.findAll()).thenReturn(testUsers);
+        
+        List<Users> result = userService.findUsersByEmailPattern(".*@example\\.com");
+        
+        assertEquals(2, result.size());
+        assertTrue(result.stream()
+                .map(Users::getEmail)
+                .allMatch(email -> email.endsWith("@example.com")));
+    }
+
+    @Test
+    public void testGetEmailDomainCounts() {
+        when(userRepository.findAll()).thenReturn(testUsers);
+        
+        Map<String, Long> result = userService.getEmailDomainCounts();
+        
+        assertEquals(2, result.size());
+        assertEquals(Long.valueOf(2), result.get("example.com"));
+        assertEquals(Long.valueOf(1), result.get("test.com"));
     }
 }

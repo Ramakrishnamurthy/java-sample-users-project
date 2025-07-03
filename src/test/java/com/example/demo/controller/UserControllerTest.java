@@ -4,30 +4,32 @@ import com.example.demo.model.Users;
 import com.example.demo.service.UserService;
 import org.junit.Before;
 import org.junit.Test;
+import org.junit.runner.RunWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import org.springframework.http.ResponseEntity;
+import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.*;
 
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
+@RunWith(SpringRunner.class)
 public class UserControllerTest {
 
+    @Mock
     private UserService userService;
+
+    @InjectMocks
     private UserController userController;
+
     private List<Users> testUsers;
 
     @Before
     public void setUp() {
-        userService = mock(UserService.class);
-        userController = new UserController();
-        // Use reflection to set the mock service
-        try {
-            java.lang.reflect.Field field = UserController.class.getDeclaredField("userService");
-            field.setAccessible(true);
-            field.set(userController, userService);
-        } catch (Exception e) {
-            // Handle reflection exception
-        }
+        MockitoAnnotations.openMocks(this);
         
         testUsers = Arrays.asList(
             new Users(1L, "John Doe", "john@example.com"),
@@ -57,6 +59,27 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testGetUserById() {
+        Users user = testUsers.get(0);
+        when(userService.findUserById(1L)).thenReturn(Optional.of(user));
+
+        ResponseEntity<Users> result = userController.getUserById(1L);
+
+        assertEquals(200, result.getStatusCodeValue());
+        assertEquals(user, result.getBody());
+    }
+
+    @Test
+    public void testGetUserByIdNotFound() {
+        when(userService.findUserById(999L)).thenReturn(Optional.empty());
+
+        ResponseEntity<Users> result = userController.getUserById(999L);
+
+        assertEquals(404, result.getStatusCodeValue());
+        assertNull(result.getBody());
+    }
+
+    @Test
     public void testGetUsersByDomain() {
         List<Users> domainUsers = Arrays.asList(testUsers.get(0));
         when(userService.getUsersByDomain("example.com")).thenReturn(domainUsers);
@@ -80,7 +103,7 @@ public class UserControllerTest {
 
     @Test
     public void testGetGroupedByDomain() {
-        Map<String, List<Users>> groupedUsers = new HashMap<String, List<Users>>();
+        Map<String, List<Users>> groupedUsers = new HashMap<>();
         groupedUsers.put("example.com", Arrays.asList(testUsers.get(0)));
         groupedUsers.put("test.com", Arrays.asList(testUsers.get(1)));
         
@@ -94,6 +117,21 @@ public class UserControllerTest {
     }
 
     @Test
+    public void testGetEmailDomainCounts() {
+        Map<String, Long> domainCounts = new HashMap<>();
+        domainCounts.put("example.com", 1L);
+        domainCounts.put("test.com", 1L);
+        
+        when(userService.getEmailDomainCounts()).thenReturn(domainCounts);
+
+        Map<String, Long> result = userController.getEmailDomainCounts();
+
+        assertEquals(2, result.size());
+        assertEquals(Long.valueOf(1), result.get("example.com"));
+        verify(userService).getEmailDomainCounts();
+    }
+
+    @Test
     public void testSearchByName() {
         List<Users> searchResults = Arrays.asList(testUsers.get(0));
         when(userService.searchUsersByName("john")).thenReturn(searchResults);
@@ -103,5 +141,17 @@ public class UserControllerTest {
         assertEquals(1, result.size());
         assertEquals("John Doe", result.get(0).getName());
         verify(userService).searchUsersByName("john");
+    }
+
+    @Test
+    public void testGetUsersByEmailPattern() {
+        List<Users> patternUsers = Arrays.asList(testUsers.get(0));
+        when(userService.findUsersByEmailPattern(".*@example\\.com")).thenReturn(patternUsers);
+
+        List<Users> result = userController.getUsersByEmailPattern(".*@example\\.com");
+
+        assertEquals(1, result.size());
+        assertEquals("john@example.com", result.get(0).getEmail());
+        verify(userService).findUsersByEmailPattern(".*@example\\.com");
     }
 }
