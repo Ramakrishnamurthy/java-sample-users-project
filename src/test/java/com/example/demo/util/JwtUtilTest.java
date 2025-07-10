@@ -1,22 +1,23 @@
 package com.example.demo.util;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilTest {
 
     private JwtUtil jwtUtil;
     private static final String TEST_USERNAME = "testuser";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         jwtUtil = new JwtUtil();
     }
 
     @Test
-    public void testGenerateToken() {
+    @DisplayName("generateToken returns a valid JWT token")
+    void testGenerateToken() {
         String token = jwtUtil.generateToken(TEST_USERNAME);
         
         assertNotNull(token);
@@ -25,7 +26,8 @@ public class JwtUtilTest {
     }
 
     @Test
-    public void testExtractUsername() {
+    @DisplayName("extractUsername returns correct username from token")
+    void testExtractUsername() {
         String token = jwtUtil.generateToken(TEST_USERNAME);
         
         String extractedUsername = jwtUtil.extractUsername(token);
@@ -34,7 +36,8 @@ public class JwtUtilTest {
     }
 
     @Test
-    public void testIsTokenValid() {
+    @DisplayName("isTokenValid returns true for valid token")
+    void testIsTokenValid() {
         String token = jwtUtil.generateToken(TEST_USERNAME);
         
         boolean isValid = jwtUtil.isTokenValid(token);
@@ -43,7 +46,8 @@ public class JwtUtilTest {
     }
 
     @Test
-    public void testGenerateTokenForDifferentUsers() {
+    @DisplayName("generateToken creates different tokens for different users")
+    void testGenerateTokenForDifferentUsers() {
         String token1 = jwtUtil.generateToken("user1");
         String token2 = jwtUtil.generateToken("user2");
         
@@ -53,10 +57,10 @@ public class JwtUtilTest {
         assertEquals("user2", jwtUtil.extractUsername(token2));
     }
 
-    @Test(expected = Exception.class)
-    public void testInvalidToken() {
+    @Test
+    @DisplayName("extractUsername throws exception for invalid token")
+    void testInvalidToken() {
         String invalidToken = "invalid.token.here";
-        
-        jwtUtil.extractUsername(invalidToken);
+        assertThrows(Exception.class, () -> jwtUtil.extractUsername(invalidToken));
     }
 }

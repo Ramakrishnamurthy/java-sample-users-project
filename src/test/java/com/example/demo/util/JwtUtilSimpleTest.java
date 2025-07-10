@@ -1,19 +1,21 @@
 package com.example.demo.util;
 
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilSimpleTest {
 
     @Test
-    public void testJwtUtilCreation() {
+    @DisplayName("JwtUtil can be instantiated")
+    void testJwtUtilCreation() {
         JwtUtil jwtUtil = new JwtUtil();
         assertNotNull(jwtUtil);
     }
 
     @Test
-    public void testGenerateTokenNotNull() {
+    @DisplayName("generateToken returns a non-null, non-empty JWT token")
+    void testGenerateTokenNotNull() {
         JwtUtil jwtUtil = new JwtUtil();
         String token = jwtUtil.generateToken("testuser");
         
@@ -23,7 +25,8 @@ public class JwtUtilSimpleTest {
     }
 
     @Test
-    public void testExtractUsernameFromToken() {
+    @DisplayName("extractUsername returns correct username from token")
+    void testExtractUsernameFromToken() {
         JwtUtil jwtUtil = new JwtUtil();
         String username = "testuser";
         String token = jwtUtil.generateToken(username);
@@ -34,7 +37,8 @@ public class JwtUtilSimpleTest {
     }
 
     @Test
-    public void testTokenValidation() {
+    @DisplayName("isTokenValid returns true for valid token")
+    void testTokenValidation() {
         JwtUtil jwtUtil = new JwtUtil();
         String token = jwtUtil.generateToken("testuser");
         
@@ -44,7 +48,8 @@ public class JwtUtilSimpleTest {
     }
 
     @Test
-    public void testDifferentUsersGenerateDifferentTokens() {
+    @DisplayName("generateToken creates different tokens for different users")
+    void testDifferentUsersGenerateDifferentTokens() {
         JwtUtil jwtUtil = new JwtUtil();
         String token1 = jwtUtil.generateToken("user1");
         String token2 = jwtUtil.generateToken("user2");

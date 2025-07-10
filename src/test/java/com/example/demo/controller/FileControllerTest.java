@@ -1,15 +1,17 @@
 package com.example.demo.controller;
 
-import static org.junit.Assert.fail;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-import org.junit.Before;
-import org.junit.Test;
-import org.junit.runner.RunWith;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
+import static org.junit.jupiter.api.Assertions.*;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -23,8 +25,7 @@ import org.springframework.http.MediaType;
 import com.example.demo.controller.FileController;
 import com.example.demo.service.FileService;
 
-@SuppressWarnings("deprecation")
-@RunWith(org.mockito.runners.MockitoJUnitRunner.class)
+@ExtendWith(MockitoExtension.class)
 public class FileControllerTest {
 	
 	private MockMvc mockMvc;
@@ -35,14 +36,15 @@ public class FileControllerTest {
     @InjectMocks
     private FileController fileController;
 
-	@Before
-	public void setUp() throws Exception {
+	@BeforeEach
+	void setUp() throws Exception {
         MockitoAnnotations.initMocks(this);
         mockMvc = MockMvcBuilders.standaloneSetup(fileController).build();
 	}
 
 	@Test
-	public void testCreateFile() throws Exception {
+	@DisplayName("createFile endpoint creates file and returns response")
+	void testCreateFile() throws Exception {
         String filename = "test.txt";
         String expectedResponse = "File created";
         when(fileService.createFile(filename, "Hello")).thenReturn("File created");
@@ -55,7 +57,8 @@ public class FileControllerTest {
     }
 
 	@Test
-	public void testReadFile() throws Exception{
+	@DisplayName("readFile endpoint reads file and returns response")
+	void testReadFile() throws Exception{
         String filename="test.txt";
         String expectedResponse ="Read success";
         when(fileService.readFile(filename)).thenReturn(expectedResponse);
@@ -66,7 +69,8 @@ public class FileControllerTest {
     }
 
 	@Test
-	public void testDeleteFile() throws Exception{
+	@DisplayName("deleteFile endpoint deletes file and returns response")
+	void testDeleteFile() throws Exception{
         String filename="test.txt";
         String expectedResult="File deleted successfully";
         when(fileService.deleteFile(filename)).thenReturn("File deleted successfully");

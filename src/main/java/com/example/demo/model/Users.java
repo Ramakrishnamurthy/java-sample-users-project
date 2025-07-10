@@ -11,19 +11,19 @@ import javax.validation.constraints.Size;
 
 @Entity
 public class Users {
-
     @Id
     @GeneratedValue
     private Long id;
+
     @NotNull
-    @Size(min = 2,max = 50, message = "Name must be between 2 and 50 characters")
+    @Size(min = 2, max = 50, message = "Name must be between 2 and 50 characters")
     private String name;
+
     @Email
     @NotNull
     private String email;
 
-    public Users() {
-    }
+    public Users() {}
 
     public Users(Long id, String name, String email) {
         this.id = id;
