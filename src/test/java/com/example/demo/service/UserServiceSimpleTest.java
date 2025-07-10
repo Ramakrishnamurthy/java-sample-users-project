@@ -1,11 +1,11 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Users;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 public class UserServiceSimpleTest {
 
@@ -40,11 +40,7 @@ public class UserServiceSimpleTest {
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        Collections.sort(users, new Comparator<Users>() {
-            public int compare(Users u1, Users u2) {
-                return u1.getName().compareTo(u2.getName());
-            }
-        });
+        Collections.sort(users, (u1, u2) -> u1.getName().compareTo(u2.getName()));
         
         assertEquals("Alice Smith", users.get(0).getName());
         assertEquals("Bob Johnson", users.get(1).getName());

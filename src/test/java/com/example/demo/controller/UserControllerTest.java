@@ -2,12 +2,13 @@ package com.example.demo.controller;
 
 import com.example.demo.model.Users;
 import com.example.demo.service.UserService;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserControllerTest {
@@ -16,8 +17,8 @@ public class UserControllerTest {
     private UserController userController;
     private List<Users> testUsers;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         userService = mock(UserService.class);
         userController = new UserController();
         // Use reflection to set the mock service
@@ -36,7 +37,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetAllUsers() {
+    @DisplayName("getAllUsers returns all users from service")
+    void testGetAllUsers() {
         when(userService.getAllUsers()).thenReturn(testUsers);
 
         List<Users> result = userController.getAllUsers();
@@ -47,7 +49,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testAddUser() {
+    @DisplayName("addUser adds user via service")
+    void testAddUser() {
         Users newUser = new Users(null, "Alice Brown", "alice@test.com");
         
         String result = userController.addUser(newUser);
@@ -57,7 +60,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetUsersByDomain() {
+    @DisplayName("getUsersByDomain returns users by domain")
+    void testGetUsersByDomain() {
         List<Users> domainUsers = Arrays.asList(testUsers.get(0));
         when(userService.getUsersByDomain("example.com")).thenReturn(domainUsers);
 
@@ -69,7 +73,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetSortedUsers() {
+    @DisplayName("getSortedUsers returns sorted users")
+    void testGetSortedUsers() {
         when(userService.sortUsersBy("name")).thenReturn(testUsers);
 
         List<Users> result = userController.getSortedUsers("name");
@@ -79,7 +84,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testGetGroupedByDomain() {
+    @DisplayName("getGroupedByDomain returns grouped users")
+    void testGetGroupedByDomain() {
         Map<String, List<Users>> groupedUsers = new HashMap<String, List<Users>>();
         groupedUsers.put("example.com", Arrays.asList(testUsers.get(0)));
         groupedUsers.put("test.com", Arrays.asList(testUsers.get(1)));
@@ -94,7 +100,8 @@ public class UserControllerTest {
     }
 
     @Test
-    public void testSearchByName() {
+    @DisplayName("searchByName returns users by name keyword")
+    void testSearchByName() {
         List<Users> searchResults = Arrays.asList(testUsers.get(0));
         when(userService.searchUsersByName("john")).thenReturn(searchResults);
 
