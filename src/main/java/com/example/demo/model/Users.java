@@ -1,4 +1,3 @@
-
 package com.example.demo.model;
 
 import org.hibernate.validator.constraints.Email;
@@ -8,6 +7,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.util.Objects;
+import java.util.Optional;
 
 @Entity
 public class Users {
@@ -53,5 +54,37 @@ public class Users {
 
     public void setEmail(String email) {
         this.email = email;
+    }
+
+    public Optional<String> getEmailOptional() {
+        return Optional.ofNullable(email);
+    }
+
+    public Optional<String> getNameOptional() {
+        return Optional.ofNullable(name);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Users users = (Users) o;
+        return Objects.equals(id, users.id) &&
+               Objects.equals(name, users.name) &&
+               Objects.equals(email, users.email);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, email);
+    }
+
+    @Override
+    public String toString() {
+        return "Users{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                '}';
     }
 }
