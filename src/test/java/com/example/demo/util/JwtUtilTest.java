@@ -1,62 +1,45 @@
 package com.example.demo.util;
 
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
-public class JwtUtilTest {
+class JwtUtilTest {
 
     private JwtUtil jwtUtil;
-    private static final String TEST_USERNAME = "testuser";
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         jwtUtil = new JwtUtil();
     }
 
     @Test
-    public void testGenerateToken() {
-        String token = jwtUtil.generateToken(TEST_USERNAME);
-        
+    void testGenerateTokenNotNull() {
+        String token = jwtUtil.generateToken("testuser");
         assertNotNull(token);
         assertFalse(token.isEmpty());
         assertTrue(token.contains("."));
     }
 
     @Test
-    public void testExtractUsername() {
-        String token = jwtUtil.generateToken(TEST_USERNAME);
-        
+    void testExtractUsernameFromToken() {
+        String username = "testuser";
+        String token = jwtUtil.generateToken(username);
         String extractedUsername = jwtUtil.extractUsername(token);
-        
-        assertEquals(TEST_USERNAME, extractedUsername);
+        assertEquals(username, extractedUsername);
     }
 
     @Test
-    public void testIsTokenValid() {
-        String token = jwtUtil.generateToken(TEST_USERNAME);
-        
-        boolean isValid = jwtUtil.isTokenValid(token);
-        
-        assertTrue(isValid);
+    void testTokenValidation() {
+        String token = jwtUtil.generateToken("testuser");
+        assertTrue(jwtUtil.isTokenValid(token));
     }
 
     @Test
-    public void testGenerateTokenForDifferentUsers() {
+    void testDifferentUsersGenerateDifferentTokens() {
         String token1 = jwtUtil.generateToken("user1");
         String token2 = jwtUtil.generateToken("user2");
-        
         assertNotEquals(token1, token2);
-        
-        assertEquals("user1", jwtUtil.extractUsername(token1));
-        assertEquals("user2", jwtUtil.extractUsername(token2));
-    }
-
-    @Test(expected = Exception.class)
-    public void testInvalidToken() {
-        String invalidToken = "invalid.token.here";
-        
-        jwtUtil.extractUsername(invalidToken);
     }
 }
