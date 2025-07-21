@@ -1,3 +1,19 @@
+Authentication
+
+<img width="1132" height="825" alt="Screenshot 2025-07-21 at 5 01 55 PM" src="https://github.com/user-attachments/assets/842a24b2-f57e-4b63-bbc3-e9b5d7233897" />
+
+
+
+And the Endpoint
+
+<img width="1132" height="825" alt="Screenshot 2025-07-21 at 5 01 55 PM" src="https://github.com/user-attachments/assets/0a2b6016-4865-44c4-b0f4-9407ebfc299b" />
+
+
+
+
+
+
+
 used on maven setup 3.9.9
 
 
