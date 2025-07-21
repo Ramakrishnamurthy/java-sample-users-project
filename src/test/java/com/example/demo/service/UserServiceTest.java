@@ -2,12 +2,13 @@ package com.example.demo.service;
 
 import com.example.demo.model.Users;
 import com.example.demo.repository.UserRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.*;
 
 public class UserServiceTest {
@@ -16,8 +17,8 @@ public class UserServiceTest {
     private UserService userService;
     private List<Users> testUsers;
 
-    @Before
-    public void setUp() {
+    @BeforeEach
+    void setUp() {
         userRepository = mock(UserRepository.class);
         userService = new UserService();
         // Use reflection to set the mock repository
@@ -37,7 +38,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetAllUsers() {
+    @DisplayName("Get all users returns correct list")
+    void testGetAllUsers() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.getAllUsers();
@@ -47,7 +49,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testAddUser() {
+    @DisplayName("Add user calls repository save")
+    void testAddUser() {
         Users newUser = new Users(4L, "Alice Brown", "alice@test.com");
         
         userService.addUser(newUser);
@@ -56,7 +59,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsersByDomain() {
+    @DisplayName("Get users by domain returns correct filtered list")
+    void testGetUsersByDomain() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.getUsersByDomain("example.com");
@@ -67,7 +71,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGetUsersByDomainNoMatch() {
+    @DisplayName("Get users by domain returns empty list for no match")
+    void testGetUsersByDomainNoMatch() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.getUsersByDomain("nonexistent.com");
@@ -76,7 +81,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSortUsersByName() {
+    @DisplayName("Sort users by name returns sorted list")
+    void testSortUsersByName() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.sortUsersBy("name");
@@ -87,7 +93,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSortUsersByEmail() {
+    @DisplayName("Sort users by email returns sorted list")
+    void testSortUsersByEmail() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.sortUsersBy("email");
@@ -98,7 +105,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testGroupByEmailDomain() {
+    @DisplayName("Group users by email domain returns correct map")
+    void testGroupByEmailDomain() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         Map<String, List<Users>> result = userService.groupByEmailDomain();
@@ -111,7 +119,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSearchUsersByName() {
+    @DisplayName("Search users by name returns correct filtered list")
+    void testSearchUsersByName() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.searchUsersByName("john");
@@ -122,7 +131,8 @@ public class UserServiceTest {
     }
 
     @Test
-    public void testSearchUsersByNameNoMatch() {
+    @DisplayName("Search users by name returns empty list for no match")
+    void testSearchUsersByNameNoMatch() {
         when(userRepository.findAll()).thenReturn(testUsers);
         
         List<Users> result = userService.searchUsersByName("xyz");

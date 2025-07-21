@@ -1,50 +1,43 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Users;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.DisplayName;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceSimpleTest {
 
     @Test
-    public void testGetUsersByDomainLogic() {
+    @DisplayName("Filter users by email domain using streams")
+    void testGetUsersByDomainLogic() {
         List<Users> users = Arrays.asList(
             new Users(1L, "John Doe", "john@example.com"),
             new Users(2L, "Jane Smith", "jane@test.com"),
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        List<Users> result = new ArrayList<Users>();
         String domain = "example.com";
-        
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            if (u.getEmail() != null && u.getEmail().endsWith("@" + domain)) {
-                result.add(u);
-            }
-        }
-        
+        List<Users> result = users.stream()
+            .filter(u -> u.getEmail() != null && u.getEmail().endsWith("@" + domain))
+            .toList();
         assertEquals(2, result.size());
         assertEquals("john@example.com", result.get(0).getEmail());
         assertEquals("bob@example.com", result.get(1).getEmail());
     }
 
     @Test
-    public void testSortUsersByNameLogic() {
+    @DisplayName("Sort users by name using lambda")
+    void testSortUsersByNameLogic() {
         List<Users> users = Arrays.asList(
             new Users(1L, "John Doe", "john@example.com"),
             new Users(2L, "Alice Smith", "alice@test.com"),
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        Collections.sort(users, new Comparator<Users>() {
-            public int compare(Users u1, Users u2) {
-                return u1.getName().compareTo(u2.getName());
-            }
-        });
+        users.sort(Comparator.comparing(Users::getName));
         
         assertEquals("Alice Smith", users.get(0).getName());
         assertEquals("Bob Johnson", users.get(1).getName());
@@ -52,30 +45,17 @@ public class UserServiceSimpleTest {
     }
 
     @Test
-    public void testGroupByEmailDomainLogic() {
+    @DisplayName("Group users by email domain using streams")
+    void testGroupByEmailDomainLogic() {
         List<Users> users = Arrays.asList(
             new Users(1L, "John Doe", "john@example.com"),
             new Users(2L, "Jane Smith", "jane@test.com"),
             new Users(3L, "Bob Johnson", "bob@example.com")
         );
         
-        Map<String, List<Users>> map = new HashMap<String, List<Users>>();
-        
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            String email = u.getEmail();
-            if (email != null) {
-                String[] parts = email.split("@");
-                if (parts.length == 2) {
-                    String domain = parts[1];
-                    if (!map.containsKey(domain)) {
-                        map.put(domain, new ArrayList<Users>());
-                    }
-                    map.get(domain).add(u);
-                }
-            }
-        }
-        
+        Map<String, List<Users>> map = users.stream()
+            .filter(u -> u.getEmail() != null)
+            .collect(java.util.stream.Collectors.groupingBy(u -> u.getEmail().split("@")[1]));
         assertEquals(2, map.size());
         assertTrue(map.containsKey("example.com"));
         assertTrue(map.containsKey("test.com"));
@@ -84,7 +64,8 @@ public class UserServiceSimpleTest {
     }
 
     @Test
-    public void testSearchUsersByNameLogic() {
+    @DisplayName("Search users by name using streams")
+    void testSearchUsersByNameLogic() {
         List<Users> users = Arrays.asList(
             new Users(1L, "John Doe", "john@example.com"),
             new Users(2L, "Jane Smith", "jane@test.com"),
@@ -92,15 +73,9 @@ public class UserServiceSimpleTest {
         );
         
         String keyword = "john";
-        List<Users> result = new ArrayList<Users>();
-        
-        for (int i = 0; i < users.size(); i++) {
-            Users u = users.get(i);
-            if (u.getName() != null && u.getName().toLowerCase().contains(keyword.toLowerCase())) {
-                result.add(u);
-            }
-        }
-        
+        List<Users> result = users.stream()
+            .filter(u -> u.getName() != null && u.getName().toLowerCase().contains(keyword.toLowerCase()))
+            .toList();
         assertEquals(2, result.size());
         assertTrue(result.get(0).getName().toLowerCase().contains("john"));
         assertTrue(result.get(1).getName().toLowerCase().contains("john"));
