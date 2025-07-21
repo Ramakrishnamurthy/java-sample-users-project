@@ -1,11 +1,10 @@
 package com.example.demo.service;
 
 import com.example.demo.model.Users;
-import org.junit.Test;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 import java.util.*;
-
-import static org.junit.Assert.*;
 
 public class UserServiceSimpleTest {
 

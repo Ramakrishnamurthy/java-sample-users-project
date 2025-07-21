@@ -2,13 +2,13 @@ package com.example.demo.service;
 
 import com.example.demo.model.Users;
 import com.example.demo.repository.UserRepository;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.util.*;
 
-import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class UserServiceTest {
 
@@ -16,7 +16,7 @@ public class UserServiceTest {
     private UserService userService;
     private List<Users> testUsers;
 
-    @Before
+    @BeforeEach
     public void setUp() {
         userRepository = mock(UserRepository.class);
         userService = new UserService();

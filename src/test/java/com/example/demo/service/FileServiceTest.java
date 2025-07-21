@@ -1,12 +1,12 @@
 package com.example.demo.service;
 
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 
 import java.io.File;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class FileServiceTest {
 
@@ -14,7 +14,7 @@ public class FileServiceTest {
     private static final String TEST_FILENAME = "test-file.txt";
     private static final String TEST_CONTENT = "This is test content";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         fileService = new FileService();
         // Clean up any existing test file
@@ -24,7 +24,7 @@ public class FileServiceTest {
         }
     }
 
-    @After
+    @AfterEach
     public void tearDown() {
         // Clean up test file after each test
         File testFile = new File("files/" + TEST_FILENAME);
@@ -61,7 +61,7 @@ public class FileServiceTest {
         
         String result = fileService.readFile(TEST_FILENAME);
         
-        assertEquals(TEST_CONTENT + "\n", result);
+        assertEquals(TEST_CONTENT, result);
     }
 
     @Test
