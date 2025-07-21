@@ -1,16 +1,15 @@
 package com.example.demo.util;
 
-import org.junit.Before;
-import org.junit.Test;
-
-import static org.junit.Assert.*;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import static org.junit.jupiter.api.Assertions.*;
 
 public class JwtUtilTest {
 
     private JwtUtil jwtUtil;
     private static final String TEST_USERNAME = "testuser";
 
-    @Before
+    @BeforeEach
     public void setUp() {
         jwtUtil = new JwtUtil();
     }
@@ -53,10 +52,9 @@ public class JwtUtilTest {
         assertEquals("user2", jwtUtil.extractUsername(token2));
     }
 
-    @Test(expected = Exception.class)
+    @Test
     public void testInvalidToken() {
         String invalidToken = "invalid.token.here";
-        
-        jwtUtil.extractUsername(invalidToken);
+        assertThrows(Exception.class, () -> jwtUtil.extractUsername(invalidToken));
     }
 }

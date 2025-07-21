@@ -29,21 +29,21 @@ public class UserController {
 
     @GetMapping("/by-domain")
     public List<Users> getUsersByDomain(@RequestParam String domain) {
-        return userService.getUsersByDomain(domain);
+        return Optional.ofNullable(userService.getUsersByDomain(domain)).orElse(List.of());
     }
 
     @GetMapping("/sorted")
     public List<Users> getSortedUsers(@RequestParam(defaultValue = "name") String field) {
-        return userService.sortUsersBy(field);
+        return Optional.ofNullable(userService.sortUsersBy(field)).orElse(List.of());
     }
 
     @GetMapping("/grouped-by-domain")
     public Map<String, List<Users>> getGroupedByDomain() {
-        return userService.groupByEmailDomain();
+        return Optional.ofNullable(userService.groupByEmailDomain()).orElse(Map.of());
     }
 
     @GetMapping("/search")
     public List<Users> searchByName(@RequestParam String keyword) {
-        return userService.searchUsersByName(keyword);
+        return Optional.ofNullable(userService.searchUsersByName(keyword)).orElse(List.of());
     }
 }
