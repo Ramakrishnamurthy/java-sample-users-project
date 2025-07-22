@@ -13,6 +13,6 @@ public class TrelloReportController {
 
     @GetMapping("/generate-report")
     public String generateAgileReport(@RequestParam String boardId) {
-        return trelloReportService.generateReport(boardId);
+        return trelloReportService.exportBoardAndLists(boardId);
     }
 }

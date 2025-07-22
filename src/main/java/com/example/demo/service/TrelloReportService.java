@@ -1,72 +1,59 @@
 package com.example.demo.service;
 
 import com.example.demo.util.*;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.*;
 
 import java.io.FileWriter;
 import java.io.PrintWriter;
-import java.net.http.HttpResponse;
 import java.util.List;
 import java.util.Map;
 
 @Service
 public class TrelloReportService {
 
-    private static final ObjectMapper mapper = new ObjectMapper();
+    private final TrelloApiUtil apiUtil;
 
-    public String generateReport(String boardId) {
-        String fileName = "trello_board_data.csv";
+    public TrelloReportService(TrelloApiUtil apiUtil) {
+        this.apiUtil = apiUtil;
+    }
+
+    public String exportBoardAndLists(String boardId) {
+        String fileName = "trello_board_list_data.csv";
 
         try (PrintWriter writer = new PrintWriter(new FileWriter(fileName))) {
-
-            writer.println("BoardId,Board Name,ListId,List Name,Board Description,CardId,Card Name,Checklist Name");
+            // CSV Header
+            writer.println("BoardId,Board Name,Board URL,Board Description,ListId,List Name,List Position");
 
             // Get Board Info
-            Map<String, Object> board = TrelloApiUtil.getJson("/boards/" + boardId);
-            String boardName = (String) board.get("name");
+            Map<String, Object> board = apiUtil.getJson("/boards/" + boardId);
+            String boardName = sanitize((String) board.get("name"));
             String boardDesc = sanitize((String) board.get("desc"));
+            String boardUrl = "https://trello.com/b/" + board.get("shortLink");
 
-            // Get Lists
-            List<Map<String, Object>> lists = TrelloApiUtil.getJsonList("/boards/" + boardId + "/lists");
+            // Get Lists on the Board
+            List<Map<String, Object>> lists = apiUtil.getJsonList("/boards/" + boardId + "/lists");
 
             for (Map<String, Object> list : lists) {
                 String listId = (String) list.get("id");
                 String listName = sanitize((String) list.get("name"));
+                int listPos = ((Number) list.get("pos")).intValue();
 
-                // Get Cards
-                List<Map<String, Object>> cards = TrelloApiUtil.getJsonList("/lists/" + listId + "/cards");
-
-                for (Map<String, Object> card : cards) {
-                    String cardId = (String) card.get("id");
-                    String cardName = sanitize((String) card.get("name"));
-
-                    // Get Checklists
-                    List<Map<String, Object>> checklists = TrelloApiUtil.getJsonList("/cards/" + cardId + "/checklists");
-
-                    if (checklists.isEmpty()) {
-                        writer.printf("%s,%s,%s,%s,%s,%s,%s,%s%n",
-                                boardId, boardName, listId, listName, boardDesc, cardId, cardName, "");
-                    }
-
-                    for (Map<String, Object> checklist : checklists) {
-                        String checklistName = sanitize((String) checklist.get("name"));
-                        writer.printf("%s,%s,%s,%s,%s,%s,%s,%s%n",
-                                boardId, boardName, listId, listName, boardDesc, cardId, cardName, checklistName);
-                    }
-                }
+                writer.printf("%s,%s,%s,%s,%s,%s,%d%n",
+                        boardId, boardName, boardUrl, boardDesc,
+                        listId, listName, listPos);
             }
 
-            return "Report generated: " + fileName;
+            return "Board and list data exported to: " + fileName;
 
         } catch (Exception e) {
             e.printStackTrace();
-            return "Error generating report: " + e.getMessage();
+            return "Error exporting data: " + e.getMessage();
         }
     }
 
+    // Optional: Simple sanitizer to avoid CSV breaking characters
     private String sanitize(String value) {
-        return value == null ? "" : value.replaceAll("[\\r\\n,]", " ").trim();
+        if (value == null) return "";
+        return value.replace(",", " ").replaceAll("\\s+", " ").trim();
     }
 }
