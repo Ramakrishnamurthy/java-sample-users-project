@@ -1,0 +1,8 @@
+BoardId,Board Name,ListId,List Name,Board Description,CardId,Card Name,Checklist Name
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf24a1f65f0b0aa02684,Backlog,,687e51c9b3b3602458ab9aeb,Setup Authentication,Setup Spring Security
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf24a1f65f0b0aa02684,Backlog,,687e51c9b3b3602458ab9aeb,Setup Authentication,JWT setup
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf24a1f65f0b0aa02684,Backlog,,6878bf25427009df96f73032,Story: Registration Flow,Registration Checklist
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf2287cb08fc4a92f8ea,To Do,,6878bf27c1d0ba41f4e7b8f5,Story: Admin Dashboard,Dashboard Checklist
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf2303e95d46a69d7152,In Progress,,6878bcddfb1cde244f997429,Implement Login,Development Tasks
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bf2303e95d46a69d7152,In Progress,,6878bf26322d90fb9f04084e,Story: Password Reset,Reset Flow Checklist
+6878bcdb85dc33d9d7fc9aa8,Agile Board,6878bcdd4ce38c7b6a2fb3ed,DONE,,6878bf25c2f01e5ea49269cd,Story: User Login Page,Login Checklist
