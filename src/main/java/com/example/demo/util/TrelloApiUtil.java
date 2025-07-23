@@ -27,8 +27,13 @@ public class TrelloApiUtil {
         HttpRequest request = HttpRequest.newBuilder()
                 .uri(URI.create(trelloConfig.getBaseUrl() + path + buildAuthQuery()))
                 .GET().build();
+        System.out.println("🔐 API URL: " + trelloConfig.getBaseUrl() + path + buildAuthQuery());
+        System.out.println("📦 KEY: " + trelloConfig.getKey());
+        System.out.println("📦 TOKEN: " + trelloConfig.getToken());
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+
+        System.out.println("📦 Response: " + response.body());
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("Trello API Error [" + response.statusCode() + "]: " + response.body());
@@ -47,6 +52,7 @@ public class TrelloApiUtil {
         System.out.println("📦 TOKEN: " + trelloConfig.getToken());
 
         HttpResponse<String> response = client.send(request, HttpResponse.BodyHandlers.ofString());
+        System.out.println("📦 Response: " + response.body());
 
         if (response.statusCode() != 200) {
             throw new RuntimeException("Trello API Error [" + response.statusCode() + "]: " + response.body());
