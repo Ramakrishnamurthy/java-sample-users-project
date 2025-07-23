@@ -1,3 +1,12 @@
+
+
+
+
+
+
+
+
+
 Authentication
 
 <img width="1132" height="825" alt="Screenshot 2025-07-21 at 5 01 55 PM" src="https://github.com/user-attachments/assets/842a24b2-f57e-4b63-bbc3-e9b5d7233897" />
@@ -7,6 +16,39 @@ Authentication
 And the Endpoint
 
 <img width="1132" height="825" alt="Screenshot 2025-07-21 at 5 01 55 PM" src="https://github.com/user-attachments/assets/0a2b6016-4865-44c4-b0f4-9407ebfc299b" />
+
+**The reports::**
+Board report:
+curl --location 'http://localhost:8080/api/trello/generate-report?boardId=6878bcdb85dc33d9d7fc9aa8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzUzMjU3MDEzLCJleHAiOjE3NTMyOTMwMTN9.xJNJKOQur44msUiu-n842mfrln7xrASHe5OBpUwR7yI'
+
+Cards report
+
+curl --location 'http://localhost:8080/api/trello/generate-cards-report?boardId=6878bcdb85dc33d9d7fc9aa8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzUzMjU3MDEzLCJleHAiOjE3NTMyOTMwMTN9.xJNJKOQur44msUiu-n842mfrln7xrASHe5OBpUwR7yI'
+
+Members report:
+curl --location 'http://localhost:8080/api/trello/generate-members-report?boardId=6878bcdb85dc33d9d7fc9aa8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzUzMjU3MzUwLCJleHAiOjE3NTMyOTMzNTB9.86AenqXsbDOJNmWZR7FflqjsAhbrqmLe82xFzB_n9h4'
+
+Checklists report
+
+curl --location 'http://localhost:8080/api/trello/generate-checklists-report?boardId=6878bcdb85dc33d9d7fc9aa8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzUzMjU3MzUwLCJleHAiOjE3NTMyOTMzNTB9.86AenqXsbDOJNmWZR7FflqjsAhbrqmLe82xFzB_n9h4'
+
+Labels report:
+curl --location 'http://localhost:8080/api/trello/generate-labels-report?boardId=6878bcdb85dc33d9d7fc9aa8' \
+--header 'Authorization: Bearer eyJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1c2VyIiwiaWF0IjoxNzUzMjU3MzUwLCJleHAiOjE3NTMyOTMzNTB9.86AenqXsbDOJNmWZR7FflqjsAhbrqmLe82xFzB_n9h4'
+
+
+
+
+
+
+
+
+
+
 
 
 
