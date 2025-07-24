@@ -1,0 +1,8 @@
+CardId,Card Name,ChecklistId,Checklist Name,Total Items,Completed Items,Percent Complete
+687e51c9b3b3602458ab9aeb,Setup Authentication,687e51f48fe419fdcbdc6de5,Setup Spring Security,0,0,0%
+687e51c9b3b3602458ab9aeb,Setup Authentication,687e52022f722c5572916cf9,JWT setup,0,0,0%
+6878bf25427009df96f73032,Story: Registration Flow,6878bf2a7d447a8066f110c2,Registration Checklist,3,1,33%
+6878bf27c1d0ba41f4e7b8f5,Story: Admin Dashboard,6878bf2e62ad1b860a2547a6,Dashboard Checklist,3,3,100%
+6878bcddfb1cde244f997429,Implement Login,6878bcde909109d4c140ba88,Development Tasks,3,2,66%
+6878bf26322d90fb9f04084e,Story: Password Reset,6878bf2c352b7ba71920a6ee,Reset Flow Checklist,3,0,0%
+6878bf25c2f01e5ea49269cd,Story: User Login Page,6878bf27fbf7797e7f43fc26,Login Checklist,3,0,0%

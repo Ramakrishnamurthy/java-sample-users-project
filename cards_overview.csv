@@ -1,0 +1,7 @@
+CardId,Card Name,Card URL,Card Description,ListId,List Name,Last Activity,Due Date,Labels
+687e51c9b3b3602458ab9aeb,Setup Authentication,https://trello.com/c/n7sliT6R,Initialise JWT,6878bf24a1f65f0b0aa02684,Backlog,2025-07-21T14:42:40.063Z,,
+6878bf25427009df96f73032,Story: Registration Flow,https://trello.com/c/MbxZzKGG,,6878bf24a1f65f0b0aa02684,Backlog,2025-07-21T14:43:48.757Z,,
+6878bf27c1d0ba41f4e7b8f5,Story: Admin Dashboard,https://trello.com/c/Tfp3mA3i,,6878bf2287cb08fc4a92f8ea,To Do,2025-07-21T14:57:46.642Z,,
+6878bcddfb1cde244f997429,Implement Login,https://trello.com/c/wYq1tWUk,As a user I want to log in so that I can access my dashboard,6878bf2303e95d46a69d7152,In Progress,2025-07-21T14:58:19.858Z,,
+6878bf26322d90fb9f04084e,Story: Password Reset,https://trello.com/c/kj56ddtl,,6878bf2303e95d46a69d7152,In Progress,2025-07-21T15:02:38.586Z,,
+6878bf25c2f01e5ea49269cd,Story: User Login Page,https://trello.com/c/Rav4HsIW,,6878bcdd4ce38c7b6a2fb3ed,DONE,2025-07-21T14:58:22.908Z,,
